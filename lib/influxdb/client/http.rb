@@ -4,6 +4,7 @@ require 'net/http'
 require 'net/https'
 
 module InfluxDB
+  # rubocop:disable Metrics/ModuleLength
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   module HTTP # :nodoc:
@@ -88,10 +89,11 @@ module InfluxDB
       if response.body
         parsed_response = {}
         response.body.each_line do |line|
-          # This hash merge overcomes a bug in the response body returned from GROUP BY queries when chunking is
-          # enabled (to return more than 10,000 entries). Specifically, instead of one JSON response, you get one
-          # per line. We need to merge the "results" keys by appending their arrays (one per series).
-          parsed_response.merge!(JSON.parse(line)) { |key, old, new| old + new }
+          # This hash merge overcomes a bug in the response body returned from GROUP BY queries
+          # when chunking is enabled (to return more than 10,000 entries). Specifically, instead
+          # of one JSON response, you get one per line. We merge the "results" keys by appending
+          # their arrays (one per series). [https://github.com/influxdata/influxdb/issues/7000]
+          parsed_response.merge!(JSON.parse(line)) { |_key, old, new| old + new }
         end
       end
 

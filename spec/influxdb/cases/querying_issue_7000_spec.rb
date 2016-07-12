@@ -1,5 +1,5 @@
-# TODO Update or remove once https://github.com/influxdata/influxdb/issues/7000 has been addressed.
-#      - These tests only verify that multi-line JSON responses are parsed and merged correctly.
+# TODO: Update or remove once https://github.com/influxdata/influxdb/issues/7000 has been addressed
+#       - These tests only verify that multi-line JSON responses are parsed and merged correctly.
 
 require "spec_helper"
 require "json"

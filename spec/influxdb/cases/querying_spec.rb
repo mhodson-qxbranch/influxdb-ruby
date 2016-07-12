@@ -134,8 +134,7 @@ describe InfluxDB::Client do
            "values" => [{ "time" => 1_438_580_576, "temp" => 34, "value" => 0.343443 }] },
          { "name" => "cpu", "tags" => { "region" => "us" },
            "values" => [{ "time" => 1_438_612_976, "temp" => 92, "value" => 0.3445 },
-                        { "time" => 1_438_612_989, "temp" => 68, "value" => 0.8787 }]
-        }]
+                        { "time" => 1_438_612_989, "temp" => 68, "value" => 0.8787 }] }]
       end
       let(:query) { 'SELECT * FROM cpu' }
 
@@ -144,8 +143,8 @@ describe InfluxDB::Client do
       end
     end
 
-    # TODO Subject to change depending on outcome of https://github.com/influxdata/influxdb/issues/6999
-    #      - Specifically, it may be decided that being forced to set "chunked=true" is not required.
+    # TODO: Subject to change depending on https://github.com/influxdata/influxdb/issues/6999
+    #       - It may be decided that being forced to set "chunked=true" is not required.
     context "with chunk_size set to 100" do
       let(:args) { { chunk_size: 100 } }
       let(:extra_params) { { chunked: "true", chunk_size: "100" } }
