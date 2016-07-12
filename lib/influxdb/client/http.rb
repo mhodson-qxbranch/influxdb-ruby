@@ -86,13 +86,10 @@ module InfluxDB
     end
 
     def handle_successful_response(response, options)
+      # Support line-delimited streaming JSON [https://github.com/influxdata/influxdb/issues/7000].
       if response.body
         parsed_response = {}
         response.body.each_line do |line|
-          # This hash merge overcomes a bug in the response body returned from GROUP BY queries
-          # when chunking is enabled (to return more than 10,000 entries). Specifically, instead
-          # of one JSON response, you get one per line. We merge the "results" keys by appending
-          # their arrays (one per series). [https://github.com/influxdata/influxdb/issues/7000]
           parsed_response.merge!(JSON.parse(line)) { |_key, old, new| old + new }
         end
       end
