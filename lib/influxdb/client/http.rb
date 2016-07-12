@@ -85,7 +85,16 @@ module InfluxDB
     end
 
     def handle_successful_response(response, options)
-      parsed_response = JSON.parse(response.body) if response.body
+      if response.body
+        parsed_response = {}
+        response.body.each_line do |line|
+          # This hash merge overcomes a bug in the response body returned from GROUP BY queries when chunking is
+          # enabled (to return more than 10,000 entries). Specifically, instead of one JSON response, you get one
+          # per line. We need to merge the "results" keys by appending their arrays (one per series).
+          parsed_response.merge!(JSON.parse(line)) { |key, old, new| old + new }
+        end
+      end
+
       errors = errors_from_response(parsed_response)
 
       raise InfluxDB::QueryError, errors if errors
