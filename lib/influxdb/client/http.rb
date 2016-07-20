@@ -8,12 +8,12 @@ module InfluxDB
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   module HTTP # :nodoc:
-    def get(url, options = {})
+    def get(url, options = {}, json_streaming = false)
       connect_with_retry do |http|
         response = do_request http, Net::HTTP::Get.new(url)
         case response
         when Net::HTTPSuccess
-          handle_successful_response(response, options)
+          handle_successful_response(response, options, json_streaming)
         when Net::HTTPUnauthorized
           raise InfluxDB::AuthenticationError, response.body
         else
@@ -85,13 +85,16 @@ module InfluxDB
       raise InfluxDB::Error, response
     end
 
-    def handle_successful_response(response, options)
-      # Support line-delimited streaming JSON [https://github.com/influxdata/influxdb/issues/7000].
-      if response.body
-        parsed_response = {}
-        response.body.each_line do |line|
-          parsed_response.merge!(JSON.parse(line)) { |_key, old, new| old + new }
+    def handle_successful_response(response, options, json_streaming)
+      if json_streaming
+        if response.body
+          parsed_response = {}
+          response.body.each_line do |line|
+            parsed_response.merge!(JSON.parse(line)) { |_key, old, new| old + new }
+          end
         end
+      elsif response.body
+        parsed_response = JSON.parse(response.body)
       end
 
       errors = errors_from_response(parsed_response)
