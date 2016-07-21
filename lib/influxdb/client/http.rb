@@ -8,12 +8,12 @@ module InfluxDB
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   module HTTP # :nodoc:
-    def get(url, options = {}, json_streaming = false)
+    def get(url, options = {})
       connect_with_retry do |http|
         response = do_request http, Net::HTTP::Get.new(url)
         case response
         when Net::HTTPSuccess
-          handle_successful_response(response, options, json_streaming)
+          handle_successful_response(response, options)
         when Net::HTTPUnauthorized
           raise InfluxDB::AuthenticationError, response.body
         else
@@ -85,8 +85,8 @@ module InfluxDB
       raise InfluxDB::Error, response
     end
 
-    def handle_successful_response(response, options, json_streaming)
-      if json_streaming
+    def handle_successful_response(response, options)
+      if options.fetch(:json_streaming, false)
         if response.body
           parsed_response = {}
           response.body.each_line do |line|

@@ -18,7 +18,7 @@ module InfluxDB
 
         params = query_params(query, opts)
         url = full_url("/query".freeze, params)
-        series = fetch_series(get(url, { parse: true }, json_streaming))
+        series = fetch_series(get(url, parse: true, json_streaming: json_streaming))
 
         if block_given?
           series.each do |s|
