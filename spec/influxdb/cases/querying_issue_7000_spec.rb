@@ -1,5 +1,5 @@
-# TODO: Update or remove once https://github.com/influxdata/influxdb/issues/7000 has been addressed
-#       - These tests only verify that multi-line JSON responses are parsed and merged correctly.
+# This test spec addresses closed issue https://github.com/influxdata/influxdb/issues/7000 where
+# it was confirmed that when chunking is enabled, the InfluxDB REST API returns multi-line JSON.
 
 require "spec_helper"
 require "json"

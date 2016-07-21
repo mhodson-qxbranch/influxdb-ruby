@@ -26,8 +26,8 @@ describe InfluxDB::Client do
     let(:url) { subject.send(:full_url, '/') }
 
     it "GET" do
-      stub_request(:get, stub_url).to_return(body: '{}')
-      expect(subject.get(url, parse: true)).to eq({})
+      stub_request(:get, stub_url).to_return(body: '[]')
+      expect(subject.get(url, parse: true)).to eq([])
     end
 
     it "POST" do

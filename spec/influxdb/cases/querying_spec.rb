@@ -143,8 +143,6 @@ describe InfluxDB::Client do
       end
     end
 
-    # TODO: Subject to change depending on https://github.com/influxdata/influxdb/issues/6999
-    #       - It may be decided that being forced to set "chunked=true" is not required.
     context "with chunk_size set to 100" do
       let(:args) { { chunk_size: 100 } }
       let(:extra_params) { { chunked: "true", chunk_size: "100" } }
