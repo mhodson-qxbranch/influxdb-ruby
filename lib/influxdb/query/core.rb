@@ -76,7 +76,7 @@ module InfluxDB
 
         if chunk_size
           params[:chunked] = 'true'
-          params[:chunk_size] = chunk_size.to_s
+          params[:chunk_size] = chunk_size
         end
 
         params
